@@ -1,4 +1,6 @@
-﻿using ArmediaTest.Models;
+﻿using ArmediaTest.BLL.DTOs;
+using ArmediaTest.BLL.Services.Interfaces;
+using ArmediaTest.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,15 +8,26 @@ namespace ArmediaTest.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IUserService userService )
         {
-            _logger = logger;
+            _userService = userService;
         }
-
+        
         public IActionResult Index()
         {
+            var dto = new UserDTO() {
+                TxtUser = "samira24",
+                TxtPassword = "123",
+                TxtNombre = "Samira",
+                TxtApellido = "Urbina",
+                NroDoc = "434343434",
+                CodRol = 1,
+                SnActivo = true
+            }; 
+            var res = _userService.CreateUser(dto);
+
             return View();
         }
 
