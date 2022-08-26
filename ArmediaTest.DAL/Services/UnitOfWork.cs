@@ -28,6 +28,48 @@ namespace ArmediaTest.DAL.Services
             }
         }
 
+        public void Save()
+        {
+            context.SaveChanges();
+        }
+
+        public async Task<int> SaveAsync()
+        {
+            return await context.SaveChangesAsync();
+        }
+
+        public void CreateTransaction()
+        {
+            _objTran = context.Database.BeginTransaction();
+        }
+
+        public async Task CreateTransactionAsync()
+        {
+            _objTran = await context.Database.BeginTransactionAsync();
+        }
+
+        public void Commit()
+        {
+            _objTran.Commit();
+        }
+
+        public async Task CommitAsync()
+        {
+            await _objTran.CommitAsync();
+        }
+
+        public void Rollback()
+        {
+            _objTran.Rollback();
+            _objTran.Dispose();
+        }
+
+        public async Task RollbackAsync()
+        {
+            await _objTran.RollbackAsync();
+            await _objTran.DisposeAsync();
+        }
+
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
