@@ -12,7 +12,7 @@ namespace ArmediaTest.DAL.Entities
 
         public int CodRol { get; set; }
         public string TxtDesc { get; set; } = null!;
-        public int SnActivo { get; set; }
+        public bool? SnActivo { get; set; }
 
         public virtual ICollection<TUser> TUsers { get; set; }
     }

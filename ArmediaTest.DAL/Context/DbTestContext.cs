@@ -24,6 +24,7 @@ namespace ArmediaTest.DAL.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=myserver809.database.windows.net;database=TestCrud;user=admin809;password=azure@2022*;");
             }
         }
@@ -33,13 +34,17 @@ namespace ArmediaTest.DAL.Context
             modelBuilder.Entity<TRol>(entity =>
             {
                 entity.HasKey(e => e.CodRol)
-                    .HasName("PK__tRol__F13B12111DE33E6D");
+                    .HasName("PK__tRol__F13B1211035FB3B9");
 
                 entity.ToTable("tRol");
+
+                entity.HasIndex(e => e.TxtDesc, "UQ__tRol__A097F0B62AD117CC")
+                    .IsUnique();
 
                 entity.Property(e => e.CodRol).HasColumnName("cod_rol");
 
                 entity.Property(e => e.SnActivo)
+                    .IsRequired()
                     .HasColumnName("sn_activo")
                     .HasDefaultValueSql("((1))");
 
@@ -52,9 +57,12 @@ namespace ArmediaTest.DAL.Context
             modelBuilder.Entity<TUser>(entity =>
             {
                 entity.HasKey(e => e.CodUsuario)
-                    .HasName("PK__tUsers__EA3C9B1A82F1AAF6");
+                    .HasName("PK__tUsers__EA3C9B1A2956613F");
 
                 entity.ToTable("tUsers");
+
+                entity.HasIndex(e => new { e.TxtUser, e.NroDoc }, "UQ__tUsers__CE6A495C4C7969C3")
+                    .IsUnique();
 
                 entity.Property(e => e.CodUsuario).HasColumnName("cod_usuario");
 
@@ -66,6 +74,7 @@ namespace ArmediaTest.DAL.Context
                     .HasColumnName("nro_doc");
 
                 entity.Property(e => e.SnActivo)
+                    .IsRequired()
                     .HasColumnName("sn_activo")
                     .HasDefaultValueSql("((1))");
 

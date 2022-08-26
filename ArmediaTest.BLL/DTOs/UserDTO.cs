@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ArmediaTest.DAL.Entities
+namespace ArmediaTest.BLL.DTOs
 {
-    public partial class TUser
+    public class UserDTO
     {
         public int CodUsuario { get; set; }
         public string TxtUser { get; set; } = null!;
@@ -13,7 +16,5 @@ namespace ArmediaTest.DAL.Entities
         public string NroDoc { get; set; } = null!;
         public int CodRol { get; set; }
         public bool? SnActivo { get; set; }
-
-        public virtual TRol CodRolNavigation { get; set; } = null!;
     }
 }
