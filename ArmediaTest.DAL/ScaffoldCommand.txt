@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext "Server=myserver809.database.windows.net;database=TestCrud;user=admin809;password=azure@2022*;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities -ContextDir Context -Context "DbTestContext" -StartupProject ArmediaTest.DAL -Force
