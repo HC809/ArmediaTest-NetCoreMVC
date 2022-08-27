@@ -15,6 +15,7 @@ namespace ArmediaTest.BLL.DTOs
         public string TxtApellido { get; set; } = null!;
         public string NroDoc { get; set; } = null!;
         public int CodRol { get; set; }
-        public bool? SnActivo { get; set; }
+        public string RoleName { get; set; }
+        public bool SnActivo { get; set; }
     }
 }

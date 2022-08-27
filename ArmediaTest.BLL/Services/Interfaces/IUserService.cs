@@ -10,6 +10,10 @@ namespace ArmediaTest.BLL.Services.Interfaces
 {
     public interface IUserService
     {
-        ResponseModel CreateUser(UserDTO model);
+        Task<ResponseModel> GetUsers();
+        Task<ResponseModel> GetById(int id);
+        Task<ResponseModel> CreateUser(UserDTO model);
+        Task<ResponseModel> UpdateUser(UserDTO model);
+        Task<ResponseModel> DeleteUser(int id);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using ArmediaTest.BLL.DTOs;
+using ArmediaTest.BLL.Shared.Models;
 using ArmediaTest.DAL.Entities;
+using ArmediaTest.DAL.Models;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,12 @@ namespace ArmediaTest.BLL.Utilities
     {
         public AutoMapperProfile()
         {
-            CreateMap<TUser, UserDTO>().ReverseMap();
+            CreateMap<TRol, RoleDTO>().ReverseMap();
+            CreateMap<TUser, UserDTO>()
+                .ForMember(dest => dest.TxtNombre, opt => opt.MapFrom(src => $"{src.TxtNombre} {src.TxtApellido}"))
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.CodRolNavigation.TxtDesc));
+            CreateMap<UserDTO, TUser>();
+            CreateMap<StoreProcedureResponse, ResponseModel>().ReverseMap();
         }
     }
 }

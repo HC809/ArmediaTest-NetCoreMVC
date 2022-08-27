@@ -14,7 +14,20 @@ namespace ArmediaTest.DAL.Services
         private DbTestContext context = new DbTestContext();
         private IDbContextTransaction _objTran;
 
+        private GenericRepository<TRol> roleRepository;
         private GenericRepository<TUser> userRepository;
+
+        public GenericRepository<TRol> RoleRepository
+        {
+            get
+            {
+                if (roleRepository == null)
+                {
+                    roleRepository = new GenericRepository<TRol>(context);
+                }
+                return roleRepository;
+            }
+        }
 
         public GenericRepository<TUser> UserRepository
         {

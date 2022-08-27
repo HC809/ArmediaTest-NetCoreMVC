@@ -16,6 +16,12 @@ namespace ArmediaTest.DAL.Services
     {
         protected string connString = "Server=myserver809.database.windows.net;database=TestCrud;user=admin809;password=azure@2022*;";
 
+        /// <summary>
+        /// STORE PROCEDUDE FOR INSERT USER
+        /// *VALIDATE IF USERNAME OR DOCUMENT NUMBER EXIST*
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<StoreProcedureResponse> InsertUser(TUser model)
         {
             StoreProcedureResponse response = new StoreProcedureResponse();
@@ -26,7 +32,7 @@ namespace ArmediaTest.DAL.Services
                 {
                     var _params = new DynamicParameters();
                     _params.Add("usuario", model.TxtUser);
-                    _params.Add("password", model.TxtPassword);
+                    _params.Add("password", "armedia");
                     _params.Add("nombre", model.TxtNombre);
                     _params.Add("apellido", model.TxtApellido);
                     _params.Add("documento", model.NroDoc);
@@ -37,15 +43,14 @@ namespace ArmediaTest.DAL.Services
 
                     await db.ExecuteAsync(sql: "spInsertUser", param: _params, commandType: CommandType.StoredProcedure);
 
-                    bool isSuccess = _params.Get<bool>("isSuccess");
-                    int id = _params.Get<int>("id");
-                    string? msg = _params.Get<string?>("msg");
+                    response.IsSuccess = _params.Get<bool>("isSuccess");
+                    response.Data = _params.Get<int>("id");
+                    response.Message = _params.Get<string?>("msg");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                response.Message = ex.Message;
             }
 
             return response;

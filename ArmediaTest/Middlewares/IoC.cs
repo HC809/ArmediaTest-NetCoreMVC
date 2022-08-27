@@ -10,6 +10,7 @@ namespace ArmediaTest.Middlewares
         public static IServiceCollection AddDependencyServices(this IServiceCollection services)
         {
             services.AddTransient<ISPService, SPService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
 
             return services;
