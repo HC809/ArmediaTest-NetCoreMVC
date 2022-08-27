@@ -1,0 +1,213 @@
+﻿@model ArmediaTest.BLL.DTOs.UserDTO
+
+<style>
+    .my-error-class {
+        color: #FF0000;
+    }
+
+    .my-valid-class {
+        color: green;
+    }
+
+    .error {
+        margin-left: 12px;
+    }
+</style>
+
+<div class="modal-header">
+    @{
+        if (Model.CodUsuario == 0)
+        {
+                <h5 class="modal-title">
+                    <i class="fa fa-plus"></i>
+                    &nbsp; Crear Usuario
+                </h5>
+        }
+        else
+        {
+                <h5 class="modal-title">
+                    <i class="fa fa-edit"></i>
+                    &nbsp; Editar Usuario @Model.TxtUser
+                </h5>
+        }
+    }
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+    <div>
+        <form id="UserForm">
+            @Html.HiddenFor(m => m.CodUsuario)
+            <div class="row pb-3">
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.TxtUser, "Usuario")
+                    @Html.EditorFor(m => m.TxtUser, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.TxtNombre, "Nombre")
+                    @Html.TextBoxFor(m => m.TxtNombre, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.TxtApellido, "Apellido")
+                    @Html.TextBoxFor(m => m.TxtApellido, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.NroDoc, "Número Documento")
+                    @Html.TextBoxFor(m => m.NroDoc, new { @class = "form-control "})
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.CodRol, "Rol")
+                    @Html.DropDownListFor(x => x.CodRol, new SelectList(ViewBag.Roles, "Value", "Text"), "--SELECCIONE--", new { @class = " form-control select2" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.SnActivo, new { @class = "form-check-input" })
+                    @Html.LabelFor(m => m.SnActivo, "Estado Activo", new { @class = "form-check-label" })
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button id="cancel-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <button id="save-button" type="button" class="btn btn-primary" onclick="Save()">Guardar</button>
+    <button id="loading-button" class="btn btn-primary" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Guardando...
+    </button>
+</div>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+    $("#loading-button").hide();
+    var UserForm = $("#UserForm");
+
+    function loading() {
+        $("#save-button").hide();
+        $("cancel-button").prop('disabled', true);
+        $("#loading-button").show();
+    }
+
+    function complete() {
+        $("#save-button").show();
+        $("cancel-button").prop('disabled', false);
+        $("#loading-button").hide();
+    }
+
+    UserForm.validate({
+        ignore: [],
+        rules: {
+            TxtUser: {
+                required: true,
+                maxlength: 50,
+                minlength: 3
+            },
+            TxtNombre: {
+                required: true,
+                maxlength: 200,
+                minlength: 3
+            },
+            TxtApellido: {
+                required: true,
+                maxlength: 200,
+                minlength: 3
+            },
+            NroDoc: {
+                required: true,
+                maxlength: 50,
+                minlength: 3
+            },
+            CodRol: {
+                required: true,
+            },
+        },
+        messages: {
+            TxtUser: {
+                required: "*Campo Requerido.",
+                maxlength: "Ingrese máximo {0} caracteres. ",
+                minlength: "Ingrese mínimo {0} caracteres. ",
+            },
+            TxtNombre: {
+                required: "*Campo Requerido.",
+                maxlength: "Ingrese máximo {0} caracteres. ",
+                minlength: "Ingrese mínimo {0} caracteres. ",
+            },
+            TxtApellido: {
+                required: "*Campo Requerido.",
+                maxlength: "Ingrese máximo {0} caracteres. ",
+                minlength: "Ingrese mínimo {0} caracteres. ",
+            },
+            NroDoc: {
+                required: "*Campo Requerido.",
+                maxlength: "Ingrese máximo {0} caracteres. ",
+                minlength: "Ingrese mínimo {0} caracteres. ",
+            },
+            CodRol: {
+                required: "*Campo Requerido.",
+                maxlength: "Ingrese máximo {0} caracteres. ",
+                minlength: "Ingrese mínimo {0} caracteres. ",
+            },
+        },
+        errorClass: "my-error-class",
+        validClass: "my-valid-class",
+    });
+
+    function Save() {
+        if (UserForm.valid()) {
+            $.ajax({
+                url: '@Url.Action("Save", "Users")',
+                type: "POST",
+                dataType: "JSON",
+                data: UserForm.serialize(),
+                beforeSend: function () {
+                    loading();
+                },
+                complete: function () {
+                    complete();
+                },
+                success: function (data) {
+                    var success = data.isSuccess;
+                    var message = data.message;
+                    if (success == true) {
+                        $("#userModal").modal('hide');
+                        loadDatatable();
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            text: message,
+                            showConfirmButton: false,
+                            timer: 4000
+                        })
+                    }
+                },
+                error: function (data) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error al guardar el usuario.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            });
+        }
+    }
+</script>
